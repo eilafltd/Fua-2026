@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FUA Alliance - New Year 2026 Celebration</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Libraries -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'Cairo', 'sans-serif'],
+                    },
+                    colors: {
+                        iceBlue: '#7dd3fc',
+                        royalBlue: '#1e40af',
+                        deepDark: '#020617',
+                        christmasRed: '#dc2626'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            margin: 0;
+            background-color: #020617;
+            color: #f8fafc;
+            overflow-x: hidden;
+            font-family: 'Outfit', 'Cairo', sans-serif;
+        }
+
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .dark .glass {
+            background: rgba(15, 23, 42, 0.6);
+        }
+
+        .ui-content {
+            position: relative;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .interactive {
+            pointer-events: auto;
+        }
+
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: #020617;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1s ease-out;
+        }
+
+        [dir="rtl"] { font-family: 'Cairo', sans-serif; }
+        
+        .glow-text {
+            text-shadow: 0 0 15px rgba(125, 211, 252, 0.5);
+        }
+
+        .gift-box-animate {
+            animation: giftBounce 2s infinite ease-in-out;
+        }
+
+        @keyframes giftBounce {
+            0%, 100% { transform: translateY(0) rotate(0); }
+            50% { transform: translateY(-15px) rotate(5deg); }
+        }
+    </style>
+</head>
+<body class="transition-colors duration-500">
+
+    <!-- Loading Screen -->
+    <div id="loader">
+        <div class="relative w-24 h-24 mb-6">
+            <div class="absolute inset-0 border-4 border-iceBlue/10 rounded-full"></div>
+            <div class="absolute inset-0 border-4 border-t-iceBlue rounded-full animate-spin"></div>
+            <div class="absolute inset-0 flex items-center justify-center font-bold text-iceBlue">FUA</div>
+        </div>
+        <h2 class="text-iceBlue font-black tracking-[0.5em] text-sm animate-pulse">2026 LOADING</h2>
+    </div>
+
+    <!-- 3D Scene Layer -->
+    <div id="canvas-container"></div>
+
+    <!-- UI Overlay Layer -->
+    <div class="ui-content min-h-screen flex flex-col">
+        
+        <!-- Header Section -->
+        <nav class="p-6 md:p-8 flex justify-between items-center interactive">
+            <div class="flex items-center gap-4">
+                <div class="w-14 h-14 glass rounded-2xl flex items-center justify-center font-black text-2xl text-iceBlue border-iceBlue/30 shadow-[0_0_20px_rgba(125,211,252,0.2)]">
+                    FUA
+                </div>
+                <div>
+                    <span class="block text-xs font-bold uppercase tracking-[0.3em] opacity-50" data-i18n="allianceName">Family United All</span>
+                    <span class="text-sm font-black text-iceBlue glow-text" data-i18n="tagline">The Frozen Kingdom Legacy</span>
+                </div>
+            </div>
+
+            <div class="flex gap-4">
+                <button id="theme-toggle" class="w-11 h-11 glass rounded-full flex items-center justify-center hover:bg-white/10 transition-all border border-white/5">
+                    <span id="theme-icon">🌙</span>
+                </button>
+                <button id="lang-toggle" class="px-6 py-2 glass rounded-full text-xs font-black hover:bg-white/10 transition-all border border-white/5 uppercase tracking-tighter">
+                    English
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Hero Section -->
+        <main class="flex-grow container mx-auto px-6 flex flex-col lg:flex-row items-center justify-between gap-12 py-12">
+            
+            <div class="w-full lg:w-3/5 glass p-10 md:p-16 rounded-[3.5rem] interactive gs-reveal opacity-0 border-white/5">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-iceBlue/10 border border-iceBlue/20 text-iceBlue text-[11px] font-black uppercase tracking-[0.2em] mb-8" data-i18n="eventBadge">
+                    ❄️ New Year Festival 2026
+                </div>
+                
+                <h1 class="text-5xl md:text-8xl font-black mb-8 leading-tight tracking-tighter" data-i18n="heroTitle">
+                    Family <span class="text-iceBlue">United</span> All
+                </h1>
+                
+                <p class="text-slate-400 text-xl mb-12 leading-relaxed max-w-2xl font-light" data-i18n="heroDesc">
+                    في أشد الليالي برودة، تظل عائلتنا هي الشعلة التي لا تنطفئ. لسنا مجرد تحالف، نحن كيان واحد يواجه المستحيل ويصنع المجد في كل ركن من أركان هذا العالم الجليدي.
+                </p>
+
+                <!-- Alliance Core Values -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                    <div class="p-6 rounded-3xl bg-white/5 border border-white/5 hover:bg-white/10 transition-all">
+                        <div class="text-iceBlue text-2xl mb-3">🤝</div>
+                        <h4 class="font-black text-xs uppercase mb-1" data-i18n="v1Title">Cooperation</h4>
+                        <p class="text-[10px] text-slate-500 uppercase tracking-widest" data-i18n="v1Desc">Strength in numbers</p>
+                    </div>
+                    <div class="p-6 rounded-3xl bg-white/5 border border-white/5 hover:bg-white/10 transition-all">
+                        <div class="text-iceBlue text-2xl mb-3">🔥</div>
+                        <h4 class="font-black text-xs uppercase mb-1" data-i18n="v2Title">Warmth</h4>
+                        <p class="text-[10px] text-slate-500 uppercase tracking-widest" data-i18n="v2Desc">Home in the frost</p>
+                    </div>
+                    <div class="p-6 rounded-3xl bg-white/5 border border-white/5 hover:bg-white/10 transition-all">
+                        <div class="text-iceBlue text-2xl mb-3">🏆</div>
+                        <h4 class="font-black text-xs uppercase mb-1" data-i18n="v3Title">Dominance</h4>
+                        <p class="text-[10px] text-slate-500 uppercase tracking-widest" data-i18n="v3Desc">Legendary survival</p>
+                    </div>
+                </div>
+
+                <!-- Gift Interactive Box -->
+                <div class="p-8 rounded-[2.5rem] bg-gradient-to-br from-iceBlue/10 to-transparent border border-iceBlue/20 flex flex-col sm:flex-row items-center gap-8 group">
+                    <div id="gift-trigger" class="w-24 h-24 bg-gradient-to-tr from-christmasRed to-red-800 rounded-3xl flex items-center justify-center text-4xl cursor-pointer shadow-2xl shadow-red-600/30 group-hover:scale-110 transition-all gift-box-animate active:scale-95">
+                        🎁
+                    </div>
+                    <div class="text-center sm:text-right rtl:sm:text-right">
+                        <h4 class="font-black text-2xl text-white mb-2" data-i18n="giftLabel">2026 New Year Gift</h4>
+                        <p class="text-sm text-slate-400 max-w-xs" data-i18n="giftSub">Click the gift to receive a message of strength for our family.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-full lg:w-1/3 flex justify-center interactive">
+                <!-- Sidebar Placeholder for 3D visual balance -->
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="p-10 text-center text-[10px] uppercase tracking-[0.5em] opacity-30 font-bold">
+            Whiteout Survival &bull; FUA Alliance Legacy &bull; 2025-2026
+        </footer>
+    </div>
+
+    <!-- Fullscreen Modal for Message -->
+    <div id="gift-modal" class="fixed inset-0 z-[1000] flex items-center justify-center opacity-0 pointer-events-none transition-all duration-700">
+        <div class="absolute inset-0 bg-deepDark/95 backdrop-blur-2xl"></div>
+        <div class="relative glass p-12 md:p-20 rounded-[4rem] max-w-2xl w-full mx-4 text-center transform scale-90 transition-all duration-700 border-white/10" id="modal-card">
+            <div class="absolute -top-12 left-1/2 -translate-x-1/2 w-24 h-24 bg-white rounded-[2rem] flex items-center justify-center text-5xl shadow-2xl">
+                ❄️
+            </div>
+            <h3 class="text-sm font-black mb-6 text-iceBlue uppercase tracking-[0.4em]" data-i18n="modalTitle">FUA Family Message</h3>
+            <p id="message-text" class="text-2xl md:text-4xl font-black text-white leading-tight mb-12 glow-text">
+                "..."
+            </p>
+            <button id="close-modal" class="px-12 py-5 rounded-2xl bg-white text-deepDark font-black uppercase tracking-widest hover:bg-iceBlue transition-all shadow-xl interactive">
+                <span data-i18n="closeBtn">Continue Our Glory</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. Extensive Content & Translations ---
+        const translations = {
+            en: {
+                allianceName: "Family United All",
+                tagline: "The Frozen Kingdom Legacy",
+                eventBadge: "❄️ New Year Festival 2026",
+                heroTitle: "Family <span class='text-iceBlue'>United</span> All",
+                heroDesc: "In the heart of the eternal winter, our family is the flame that never fades. We aren't just an alliance; we are a single entity facing the impossible and crafting glory in every corner of this icy world.",
+                v1Title: "Cooperation",
+                v1Desc: "Strength in numbers",
+                v2Title: "Warmth",
+                v2Desc: "Home in the frost",
+                v3Title: "Dominance",
+                v3Desc: "Legendary survival",
+                giftLabel: "2026 New Year Gift",
+                giftSub: "Click the gift to receive a message of strength for our family.",
+                modalTitle: "FUA Family Message",
+                closeBtn: "Continue Our Glory",
+                messages: [
+                    "Unity is our fire. In 2026, we will burn brighter than the stars!",
+                    "Family isn't just a word at FUA, it's our ultimate shield against the cold.",
+                    "The blizzard may be strong, but our bond is unbreakable.",
+                    "Victory in 2026 belongs to those who march as one heart. We are FUA.",
+                    "Stay warm, stay loyal, stay powerful. Our legacy is just beginning.",
+                    "Behind every great survivor is a family that refused to let them freeze.",
+                    "In 2026, we don't just survive the winter, we own it.",
+                    "Your strength is our strength. Your victory is our victory. We are FUA!",
+                    "A new year, a new chapter of dominance. FUA forever.",
+                    "The frost tests the weak, but it reveals the greatness of the FUA family.",
+                    "May your march be swift and your furnace never run out of coal this year!",
+                    "Together, we turn the ice into our kingdom."
+                ]
+            },
+            ar: {
+                allianceName: "العائلة متحدة للجميع",
+                tagline: "إرث المملكة المتجمدة",
+                eventBadge: "❄️ مهرجان رأس السنة 2026",
+                heroTitle: "Family <span class='text-iceBlue'>United</span> All",
+                heroDesc: "في قلب الشتاء الأبدي، تظل عائلتنا هي الشعلة التي لا تنطفئ. لسنا مجرد تحالف، نحن كيان واحد يواجه المستحيل ويصنع المجد في كل ركن من أركان هذا العالم الجليدي.",
+                v1Title: "التعاون",
+                v1Desc: "القوة في الاتحاد",
+                v2Title: "الدفء",
+                v2Desc: "بيتنا في الجليد",
+                v3Title: "السيادة",
+                v3Desc: "بقاء أسطوري",
+                giftLabel: "هدية رأس السنة 2026",
+                giftSub: "اضغط على الهدية لاستلام رسالة قوة لعائلتنا.",
+                modalTitle: "رسالة عائلة FUA",
+                closeBtn: "واصل مجدنا",
+                messages: [
+                    "الوحدة هي نارنا. في 2026، سنحترق بوهج أقوى من النجوم!",
+                    "العائلة ليست مجرد كلمة في FUA، إنها درعنا الأسمى ضد البرد.",
+                    "قد تكون العاصفة قوية، لكن رابطتنا لا تنكسر أبداً.",
+                    "النصر في 2026 ينتمي لأولئك الذين يسيرون بقلب واحد. نحن FUA.",
+                    "ابقَ دافئاً، ابقَ وفياً، ابقَ قوياً. إرثنا بدأ للتو.",
+                    "خلف كل ناجٍ عظيم، عائلة رفضت أن تتركه يتجمد.",
+                    "في 2026، نحن لا ننجو من الشتاء فحسب، بل نحن من يمتلكه.",
+                    "قوتك هي قوتنا. نصرك هو نصرنا. نحن FUA!",
+                    "عام جديد، فصل جديد من السيطرة. FUA إلى الأبد.",
+                    "الجليد يختبر الضعفاء، لكنه يكشف عن عظمة عائلة FUA.",
+                    "نتمنى أن تكون مسيرتك سريعة وفرنك لا ينفد من الفحم هذا العام!",
+                    "معاً، نحول الجليد إلى مملكتنا الخاصة."
+                ]
+            }
+        };
+
+        let currentLang = localStorage.getItem('fua_lang') || 'ar';
+        let currentTheme = localStorage.getItem('fua_theme') || 'dark';
+
+        // --- 2. 3D Engine (Three.js) ---
+        let scene, camera, renderer, controls, crystalGroup, snowflakes;
+
+        function init3D() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 0, 15);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.enableZoom = false;
+            controls.autoRotate = true;
+            controls.autoRotateSpeed = 0.8;
+
+            // Lights
+            const ambient = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambient);
+            const spot = new THREE.SpotLight(0x7dd3fc, 2);
+            spot.position.set(20, 20, 20);
+            scene.add(spot);
+
+            // 3D 2026 Crystal Representation
+            crystalGroup = new THREE.Group();
+            scene.add(crystalGroup);
+
+            const crystalMat = new THREE.MeshPhysicalMaterial({
+                color: 0x7dd3fc,
+                metalness: 0.9,
+                roughness: 0.1,
+                transmission: 0.5,
+                thickness: 1,
+                envMapIntensity: 1
+            });
+
+            // Geometry for "2026" abstract monumental shapes
+            const shapes = [
+                new THREE.IcosahedronGeometry(3, 0),
+                new THREE.OctahedronGeometry(2, 0),
+                new THREE.TetrahedronGeometry(2, 0),
+                new THREE.IcosahedronGeometry(2.5, 0)
+            ];
+
+            shapes.forEach((geo, i) => {
+                const mesh = new THREE.Mesh(geo, crystalMat);
+                mesh.position.x = (i - 1.5) * 5;
+                mesh.position.y = Math.sin(i) * 2;
+                crystalGroup.add(mesh);
+                
+                gsap.to(mesh.rotation, {
+                    x: Math.PI * 2,
+                    y: Math.PI * 2,
+                    duration: 15 + i * 5,
+                    repeat: -1,
+                    ease: "none"
+                });
+            });
+
+            // Snowflake Particles
+            const count = 3000;
+            const geo = new THREE.BufferGeometry();
+            const pos = new Float32Array(count * 3);
+            for(let i=0; i<count*3; i++) pos[i] = (Math.random() - 0.5) * 60;
+            geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+            
+            const snowMat = new THREE.PointsMaterial({
+                color: 0xffffff,
+                size: 0.08,
+                transparent: true,
+                opacity: 0.8
+            });
+            snowflakes = new THREE.Points(geo, snowMat);
+            scene.add(snowflakes);
+
+            function animate() {
+                requestAnimationFrame(animate);
+                
+                // Float effect
+                crystalGroup.position.y = Math.sin(Date.now() * 0.001) * 0.5;
+                
+                // Snowfall
+                const posArr = snowflakes.geometry.attributes.position.array;
+                for(let i=1; i<posArr.length; i+=3) {
+                    posArr[i] -= 0.03;
+                    if(posArr[i] < -30) posArr[i] = 30;
+                }
+                snowflakes.geometry.attributes.position.needsUpdate = true;
+                
+                controls.update();
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        }
+
+        // --- 3. Interaction & Localization Logic ---
+        function updateUI() {
+            const t = translations[currentLang];
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if(t[key]) el.innerHTML = t[key];
+            });
+
+            document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+            document.documentElement.lang = currentLang;
+            document.getElementById('lang-toggle').innerText = currentLang === 'ar' ? 'English' : 'العربية';
+            
+            // Adjust fonts
+            if(currentLang === 'ar') {
+                document.body.style.fontFamily = "'Cairo', sans-serif";
+            } else {
+                document.body.style.fontFamily = "'Outfit', sans-serif";
+            }
+        }
+
+        function toggleTheme() {
+            currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('fua_theme', currentTheme);
+            applyTheme();
+        }
+
+        function applyTheme() {
+            const icon = document.getElementById('theme-icon');
+            if(currentTheme === 'dark') {
+                document.documentElement.classList.add('dark');
+                icon.innerText = '🌙';
+            } else {
+                document.documentElement.classList.remove('dark');
+                icon.innerText = '☀️';
+            }
+        }
+
+        // Modal Message Logic
+        const modal = document.getElementById('gift-modal');
+        const modalMsg = document.getElementById('message-text');
+
+        function openGift() {
+            const msgs = translations[currentLang].messages;
+            const randomMsg = msgs[Math.floor(Math.random() * msgs.length)];
+            modalMsg.innerText = `"${randomMsg}"`;
+            
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            document.getElementById('modal-card').classList.remove('scale-90');
+            document.getElementById('modal-card').classList.add('scale-100');
+            
+            // Trigger haptic-like animation on gift
+            gsap.to("#gift-trigger", { scale: 1.5, duration: 0.1, yoyo: true, repeat: 1 });
+        }
+
+        function closeModal() {
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            document.getElementById('modal-card').classList.remove('scale-100');
+            document.getElementById('modal-card').classList.add('scale-90');
+        }
+
+        // --- 4. Initialization ---
+        window.addEventListener('load', () => {
+            init3D();
+            updateUI();
+            applyTheme();
+
+            document.getElementById('lang-toggle').onclick = () => {
+                currentLang = currentLang === 'ar' ? 'en' : 'ar';
+                localStorage.setItem('fua_lang', currentLang);
+                updateUI();
+            };
+
+            document.getElementById('theme-toggle').onclick = toggleTheme;
+            document.getElementById('gift-trigger').onclick = openGift;
+            document.getElementById('close-modal').onclick = closeModal;
+
+            // Reveal Page
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 1000);
+                
+                gsap.to(".gs-reveal", {
+                    opacity: 1,
+                    y: 0,
+                    duration: 1.5,
+                    stagger: 0.3,
+                    ease: "expo.out"
+                });
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
+
